@@ -1,15 +1,14 @@
+FROM adoptopenjdk:17-jre-hotspot as builder
+ADD . /src
+WORKDIR /src
+RUN ./mvnw package -DskipTests
 
-# Используем базовый образ OpenJDK для выполнения Java приложения
-FROM openjdk:17
-
-# Устанавливаем директорию приложения внутри контейнера
-WORKDIR /app
-
-# Копируем JAR-файл в контейнер
-COPY target/crops-0.0.1-SNAPSHOT.jar crops-0.0.1-SNAPSHOT.jar
-
-# Определяем команду для запуска приложения при запуске контейнера
-CMD ["java", "-jar", "crops-3.1.4.jar"]
+FROM adoptopenjdk:17-jre-hotspot
+ENV JAVA_HOME=/opt/java-minimal
+ENV PATH="$PATH:$JAVA_HOME/bin"
+COPY --from=builder /src/target/microservices-backend-*.jar app.jar
+EXPOSE 8000
+ENTRYPOINT ["java", "-jar", "/app.jar"]
 
 
 
