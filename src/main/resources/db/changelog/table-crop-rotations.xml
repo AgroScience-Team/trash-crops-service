@@ -5,9 +5,9 @@
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
     <changeSet id="Create crop_rotations table" author="asavershin">
-        <createTable tableName="crop-rotations">
+        <createTable tableName="crop_rotations">
             <column name="id" type="integer" autoIncrement="true">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="crop-rotations_Id"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="crop_rotations_Id"/>
             </column>
             <column name="field_id" type="integer">
                 <constraints nullable="false"/>
@@ -21,7 +21,7 @@
             <column name="end_date" type="date">
                 <constraints nullable="false"/>
             </column>
-            <column name="description" type="varchar(255)"/>
+            <column name="description" type="varchar(256)"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>
