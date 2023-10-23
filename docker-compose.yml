@@ -9,13 +9,13 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      service-db:
+      database:
         condition: service_healthy
     environment:
       - SERVER_PORT= 8000
-      - SPRING.DATASOURCE.URL=jdbc:postgresql://service-db/crops
+      - SPRING.DATASOURCE.URL=jdbc:postgresql://database/crops
 
-  service-db:
+  database:
     image: bitnami/postgresql:14
     container_name: crops-db
     env_file:
