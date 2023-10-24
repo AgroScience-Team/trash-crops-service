@@ -1,6 +1,6 @@
 package agroscience.crops.controllers;
 
-import agroscience.crops.CropsService;
+import agroscience.crops.services.CropsService;
 import agroscience.crops.dto.CropNameResponse;
 import agroscience.crops.mappers.CropMapper;
 import lombok.RequiredArgsConstructor;
