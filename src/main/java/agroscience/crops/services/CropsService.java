@@ -1,4 +1,4 @@
-package agroscience.crops;
+package agroscience.crops.services;
 
 import agroscience.crops.dao.entities.Crop;
 import agroscience.crops.dao.repositories.CropRotationRepository;
