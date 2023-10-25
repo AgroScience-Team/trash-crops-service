@@ -1,7 +1,7 @@
 package agroscience.crops.controllers;
 
+import agroscience.crops.dto.ResponseCropName;
 import agroscience.crops.services.CropsService;
-import agroscience.crops.dto.CropNameResponse;
 import agroscience.crops.mappers.CropMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,9 @@ public class CropsController {
     private final CropMapper cropMapper;
 
     @GetMapping("/currentcrop/{fieldId}")
-    public CropNameResponse getCurrentCropName(@PathVariable Long fieldId){
+    public ResponseCropName getCurrentCropName(@PathVariable Long fieldId){
         return cropMapper.cropToCropNameResponse(cropsService.getCurrentCrop(fieldId));
     }
+
+
 }

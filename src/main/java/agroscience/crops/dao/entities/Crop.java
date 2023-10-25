@@ -18,9 +18,6 @@ public class Crop {
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
-    @Column(name = "description", length = 64)
-    private String description;
-
     @OneToMany(mappedBy = "crop", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true, fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

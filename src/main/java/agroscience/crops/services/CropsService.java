@@ -15,4 +15,5 @@ public class CropsService {
     public Crop getCurrentCrop(Long fieldId) {
         return cropsRepository.findLatestCrop(fieldId);
     }
+
 }
