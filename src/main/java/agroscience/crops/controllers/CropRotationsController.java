@@ -1,6 +1,7 @@
 package agroscience.crops.controllers;
 
 import agroscience.crops.dto.Page;
+import agroscience.crops.dto.RequestCropRotation;
 import agroscience.crops.dto.ResponseCRWithField;
 import agroscience.crops.dto.ResponseListCropRotationsForField;
 import agroscience.crops.mappers.CropRotationMapper;
@@ -29,6 +30,9 @@ public class CropRotationsController {
     }
 
     @PostMapping(path = "/add-crop-rotation")
+    public ResponseCRWithField createCR(RequestCropRotation request){
+        return CRService.createCR(CRMapper.CropRotatopnRequestToCropRotation(request), request.getCropId());
+    }
 
 
 }

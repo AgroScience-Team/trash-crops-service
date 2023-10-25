@@ -8,4 +8,5 @@ public class RequestCropRotation {
     private Long cropId;
     private String startDate;
     private String endDate;
+    private String description;
 }
