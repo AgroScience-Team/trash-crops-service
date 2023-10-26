@@ -235,7 +235,23 @@
             INSERT INTO crop_rotations (field_id, crop_id, start_date, end_date, description)
             VALUES (1, 1, '2022-01-01', '2022-12-31', 'Rotation 1 for Field 1'),
                    (1, 2, '2021-01-01', '2021-12-31', 'Rotation 2 for Field 1'),
-                   (1, 3, '2023-01-01', '2023-12-31', 'Rotation 1 for Field 2');
+                   (1, 3, '2023-01-01', '2023-12-31', 'Rotation 1 for Field 2'),
+                   (2, 1, '2022-01-01', '2022-12-31', 'Rotation 1 for Field 1'),
+                   (2, 2, '2021-01-01', '2021-12-31', 'Rotation 2 for Field 1'),
+                   (3, 1, '2022-01-01', '2022-12-31', 'Rotation 1 for Field 1'),
+                   (2, 2, '2021-01-01', '2021-12-31', 'Rotation 2 for Field 1'),
+                   (1, 1, '2022-01-01', '2022-12-31', 'Rotation 1 for Field 1'),
+                   (1, 2, '2021-01-01', '2021-12-31', 'Rotation 2 for Field 1'),
+                   (1, 1, '2022-01-01', '2022-12-31', 'Rotation 1 for Field 1'),
+                   (1, 2, '2021-01-01', '2021-12-31', 'Rotation 2 for Field 1'),
+                   (1, 1, '2022-01-01', '2022-12-31', 'Rotation 1 for Field 1'),
+                   (1, 2, '2021-01-01', '2021-12-31', 'Rotation 2 for Field 1'),
+                   (1, 1, '2022-01-01', '2022-12-31', 'Rotation 1 for Field 1'),
+                   (1, 2, '2021-01-01', '2021-12-31', 'Rotation 2 for Field 1'),
+                   (1, 1, '2022-01-01', '2022-12-31', 'Rotation 1 for Field 1'),
+                   (1, 2, '2021-01-01', '2021-12-31', 'Rotation 2 for Field 1'),
+                   (1, 1, '2022-01-01', '2022-12-31', 'Rotation 1 for Field 1'),
+                   (1, 2, '2021-01-01', '2021-12-31', 'Rotation 2 for Field 1');
         </sql>
     </changeSet>
 

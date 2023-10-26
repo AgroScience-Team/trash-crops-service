@@ -1,10 +1,14 @@
 package agroscience.crops.mappers;
 
 import agroscience.crops.dao.entities.Crop;
-import agroscience.crops.dto.CropNameResponse;
+import agroscience.crops.dto.RequestCrop;
+import agroscience.crops.dto.ResponseCrop;
+import agroscience.crops.dto.ResponseCropName;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface CropMapper {
-    CropNameResponse cropToCropNameResponse(Crop crop);
+    ResponseCropName cropToCropNameResponse(Crop crop);
+    Crop requestCropToCrop(RequestCrop requestCrop);
+    ResponseCrop cropToResponseCrop(Crop crop);
 }

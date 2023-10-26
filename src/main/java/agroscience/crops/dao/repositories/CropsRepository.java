@@ -14,4 +14,6 @@ public interface CropsRepository extends JpaRepository<Crop, Long> {
             "ORDER BY cr.startDate DESC " +
             "LIMIT 1)")
     Crop findLatestCrop(Long fieldId);
+
+    Crop findCropById(Long cropId);
 }
