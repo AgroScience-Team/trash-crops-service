@@ -7,12 +7,12 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "8002:8002"
     depends_on:
       database:
         condition: service_healthy
     environment:
-      - SERVER_PORT= 8000
+      - SERVER_PORT= 8002
       - SPRING.DATASOURCE.URL=jdbc:postgresql://database/crops
   database:
     image: bitnami/postgresql:14
@@ -20,7 +20,7 @@ services:
     env_file:
       - ./src/main/resources/application.properties
     ports:
-      - "5433:5432"
+      - "5434:5434"
     volumes:
       - pgdbdata:/var/lib/postgresql/data/
     restart: unless-stopped

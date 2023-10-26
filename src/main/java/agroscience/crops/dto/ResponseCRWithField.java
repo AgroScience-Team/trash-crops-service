@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class ResponseCRWithField {
     private Long id;
-    private String cropName;
+    private ResponseCrop crop;
     private String startDate;
     private String endDate;
     private String description;

@@ -6,6 +6,7 @@ import agroscience.crops.dto.*;
 import agroscience.crops.utilities.LocalDateConverting;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 
 import java.text.ParseException;
@@ -13,11 +14,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = CropMapper.class)
 public interface CropRotationMapper {
     @Mapping(target = "startDate", source = "startDate", qualifiedByName = "localDateToString")
     @Mapping(target = "endDate", source = "endDate", qualifiedByName = "localDateToString")
-    @Mapping(target = "cropName", source = "crop", qualifiedByName = "cropName")
+    @Mapping(target = "crop", source = "crop")
     ResponseCropRotationForField cropRotationToCropRotationResponse(CropRotation cropRotation);
 
     @Mapping(target = "startDate", source = "startDate", qualifiedByName = "localDateToString")
@@ -30,7 +31,7 @@ public interface CropRotationMapper {
 
     @Mapping(target = "startDate", source = "cropRotations.startDate", qualifiedByName = "localDateToString")
     @Mapping(target = "endDate", source = "cropRotations.endDate", qualifiedByName = "localDateToString")
-    @Mapping(target = "cropName", source = "cropRotations.crop", qualifiedByName = "cropName")
+    @Mapping(target = "crop", source = "cropRotations.crop")
     @Mapping(target = "id", source = "cropRotations.id")
     ResponseCRWithField responseCRWithField(CropRotation cropRotations, ResponseFieldName field);
 
@@ -46,8 +47,11 @@ public interface CropRotationMapper {
     default LocalDate localDateToString(String date) throws ParseException {
         return LocalDateConverting.stringToLocalDateTime(date);
     }
-    @Named("cropName")
-    default String cropName(Crop crop){
-        return crop.getName();
-    }
+//    @Named("cropName")
+//    default String cropName(Crop crop){
+//        return crop.getName();
+//    }
+
+    @Mapping(target = "id", ignore = true)
+    void newCRToCR(@MappingTarget CropRotation cropRotation, CropRotation newCropRotation);
 }

@@ -1,5 +1,6 @@
 package agroscience.crops.services;
 
+import agroscience.crops.dao.entities.Crop;
 import agroscience.crops.dao.entities.CropRotation;
 import agroscience.crops.dao.repositories.CropRotationRepository;
 import agroscience.crops.dao.repositories.CropsRepository;
@@ -7,68 +8,106 @@ import agroscience.crops.dto.ResponseCRWithField;
 import agroscience.crops.dto.ResponseFieldName;
 import agroscience.crops.mappers.CropRotationMapper;
 import agroscience.crops.utilities.DifficultMapping;
+import agroscience.crops.utilities.RequestToFields;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CropRotationsService {
-    private final CropRotationRepository cropRotationRepository;
+    private final CropRotationRepository CRRepository;
     private final CropsRepository cropsRepository;
     private final WebClient webClient;
     private final CropRotationMapper CRMapper;
 
     public List<CropRotation> getAllByFieldId(Long fieldId, PageRequest request) {
-        return cropRotationRepository.findAllByFieldId(fieldId, request).toList();
+        return CRRepository.findAllByFieldId(fieldId, request).toList();
     }
 
     public List<ResponseCRWithField> getAll(PageRequest request) {
-        List<CropRotation> cropRotations = cropRotationRepository.findAllAsSlice(request).toList();
+        List<CropRotation> cropRotations = CRRepository.findAllAsSlice(request).toList();
 
-        List<ResponseFieldName> fieldNames = webClient
-                .get()
-                .uri(uriBuilder -> uriBuilder.path("/getNamesByIds")
-                        .queryParam("id", cropRotations.stream()
-                                .map(CropRotation::getFieldId).toList())
-                        .build())
-                .retrieve()
-                .bodyToFlux(ResponseFieldName.class)
-                .collectList()
-                .block();
+        List<ResponseFieldName> fieldNames = RequestToFields.getFields(webClient, cropRotations.stream()
+                .map(CropRotation::getFieldId).toList());
 
         return DifficultMapping.listResponseCRWithFieldList(cropRotations, fieldNames);
     }
 
-    public ResponseCRWithField createCR(CropRotation cropRotation, Long cropId) {
-        var crop = cropsRepository.findCropById(cropId);
-        if(crop == null){
-            throw new NullPointerException();
-        }
-        cropRotation.setCrop(crop);
-        cropRotationRepository.save(cropRotation);
+    public ResponseCRWithField createCR(CropRotation cropRotation, Long cropId) throws WebClientRequestException  {
+        var crop = cropsRepository.findById(cropId)
+                .orElseThrow(() -> new EntityNotFoundException("Не найден севооборот с id: " + cropId));
 
-        List<ResponseFieldName> fieldNames = webClient
-                .get()
-                .uri(uriBuilder -> uriBuilder.path("/getNamesByIds")
-                        .queryParam("id", cropRotation.getFieldId())
-                        .build())
-                .retrieve()
-                .bodyToFlux(ResponseFieldName.class)
-                .collectList()
-                .block();
+        cropRotation.setCrop(crop);
+        CRRepository.save(cropRotation);
+
+        List<ResponseFieldName> fieldNames = RequestToFields.getFields(webClient,
+                Collections.singletonList(cropRotation.getFieldId()));
 
         if(fieldNames.get(0) == null){
             throw new NullPointerException();
         }
 
         return CRMapper.responseCRWithField(cropRotation, fieldNames.get(0));
+    }
+
+    public ResponseCRWithField getCR(Long id) throws WebClientRequestException  {
+        var cropRotation = CRRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Не найден севооборот с id: " + id));
+
+        List<ResponseFieldName> fieldNames = RequestToFields.getFields(webClient,
+                Collections.singletonList(cropRotation.getFieldId()));
+
+        if(fieldNames.get(0) == null){
+            throw new NullPointerException();
+        }
+
+        return CRMapper.responseCRWithField(cropRotation, fieldNames.get(0));
+    }
+
+    public ResponseCRWithField updateCR(Long id, CropRotation newCropRotation, Long cropId)throws WebClientRequestException {
+
+        var cropRotation = CRRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Не найден севооборот с id: " + id));
+
+        List<ResponseFieldName> fieldNames = RequestToFields.getFields(webClient,
+                Collections.singletonList(cropRotation.getFieldId()));
+
+        if(fieldNames.get(0) == null){
+            throw new EntityNotFoundException("Не найдено поля с  id: " + id);
+        }
+
+        var crop = cropRotation.getCrop();
+        var newCrop = cropsRepository
+                .findById(cropId).orElseThrow(() -> new EntityNotFoundException("Не найдена культура с id: " + cropId));
+
+
+        System.out.println("id: "+newCrop.getId());
+
+        crop.getCropRotations().remove(cropRotation);
+
+        CRMapper.newCRToCR(cropRotation, newCropRotation);
+
+        cropRotation.setCrop(newCrop);
+
+        CRRepository.save(cropRotation);
+
+        return CRMapper.responseCRWithField(cropRotation, fieldNames.get(0));
+
+    }
+
+    public void deleteCR(Long id) {
+        var cropRotation = CRRepository.findById(id).
+                orElseThrow(() -> new EntityNotFoundException("Не найден севооборот с id: " + id));
+        var crop = cropRotation.getCrop();
+        cropRotation.setCrop(null);
+        crop.getCropRotations().remove(cropRotation);
+        CRRepository.delete(cropRotation);
     }
 }

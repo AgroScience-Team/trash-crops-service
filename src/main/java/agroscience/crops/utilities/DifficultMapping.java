@@ -2,6 +2,7 @@ package agroscience.crops.utilities;
 
 import agroscience.crops.dao.entities.CropRotation;
 import agroscience.crops.dto.ResponseCRWithField;
+import agroscience.crops.dto.ResponseCrop;
 import agroscience.crops.dto.ResponseFieldName;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class DifficultMapping {
 
             ResponseCRWithField responseCRWithField = new ResponseCRWithField();
             responseCRWithField.setId(cropRotation.getId());
-            responseCRWithField.setCropName(cropRotation.getCrop().getName());
+            responseCRWithField.setCrop(new ResponseCrop(cropRotation.getCrop().getId(), cropRotation.getCrop().getName()));
             responseCRWithField.setStartDate(cropRotation.getStartDate().toString());
             responseCRWithField.setEndDate(cropRotation.getEndDate().toString());
             responseCRWithField.setDescription(cropRotation.getDescription());

@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class ResponseCropRotationForField {
-    Long id;
-    String cropName;
-    String description;
-    String startDate;
-    String endDate;
+    private Long id;
+    private ResponseCrop crop;
+    private String description;
+    private String startDate;
+    private String endDate;
 }
